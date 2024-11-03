@@ -38,5 +38,4 @@ urlpatterns = [
     path('login/', views.custom_login_view, name='login'),
     path('loginsheet/',views.loginsheet, name='loginsheet'),
 ]
-
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

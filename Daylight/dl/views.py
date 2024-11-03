@@ -90,13 +90,13 @@ def update_modal(request) :
         todo = get_object_or_404(Todo, id=todo_id)
 
         # 폼에서 넘어온 데이터를 사용하여 Todo 업데이트
-        todo.content = request.POST.get('content', '')  # 'todoTable'에서 'content'로 변경
-        todo.text_content = request.POST.get('text', '')  # 'todoText'에서 'text'로 변경
+        todo.content = request.POST.get('todoTable', '')  # 'todoTable'에서 'content'로 변경
+        todo.text_content = request.POST.get('todoText', '')  # 'todoText'에서 'text'로 변경
 
         # 파일이 업로드된 경우
         if request.FILES.get('todoImage'):
             image = request.FILES['todoImage']
-            file_path = default_storage.save(f'todo_images/{image.name}', image)
+            file_path = default_storage.save(f'media/todo_images/{image.name}', image)
             todo.image = file_path
 
         # 데이터 저장

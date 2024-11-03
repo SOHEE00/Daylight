@@ -48,16 +48,22 @@ function openModal(tableBox2) {
 }
 
 function updateModalContent(tableBox2, todoId) {
+    log(`Todo ID____: ${todoId}`);
     var todoContent = tableBox2.querySelector('input[id^="todoTable"]')?.value || '';
     var todoText = tableBox2.querySelector('input[id^="todoText"]')?.value || '';
     var todoImage = tableBox2.querySelector('img[id^="todoimg"]')?.src;
-    var todoImage = todoImage ? todoImage.src : ''; // img 태그에서 src 값을 가져옴
+
+    console.log('todoImage___:', todoImage);
+
+   
 
     var editTodoTable = currentModal.querySelector(`[id^="editTodoTable"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoTable"]');
     var editTodoText = currentModal.querySelector(`[id^="editTodoText"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoText"]');
    
     var editTodoImage = currentModal.querySelector(`[id^="editTodoImage"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoText"]');
-   
+    var editTodoId = currentModal.querySelector(`[id^="editTodoId"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoId"]');
+
+    var viewImage = currentModal.querySelector(`[id^="viewImg"][id$="${todoId}"]`) || currentModal.querySelector('[id^="viewImg"]');
 
     if (editTodoTable) {
         editTodoTable.value = todoContent;
@@ -87,6 +93,12 @@ function updateModalContent(tableBox2, todoId) {
         log('Todo image not found, hiding image element');
     } else {
         log('Edit todo image element not found');
+    }
+    if(editTodoId){
+        editTodoId.value = todoId;
+    }
+    if(viewImage){
+        viewImage.src = todoImage;
     }
 }
 

@@ -414,7 +414,7 @@ input[type="file"] {
                     <div class="table-box2">
                     <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" >
                     <input id="todoText" name="todoText" type="text" value="{{ todo.text_content }}" >
-                    <img src="{{ todo.image }}" alt="Todo Image" style="max-width: 30px; height: auto;">
+                    <img id="todoimg" src="{{ todo.image }}" alt="Todo Image" style="max-width: 30px; height: auto;">
                     <input type="hidden" id="todoNum" name="todoNum" value="{{todo.id}}"></input>
                     </div>
                     <!-- 연필 모양 버튼 -->
@@ -471,7 +471,7 @@ input[type="file"] {
                                         <input id="todoImage{{ todo.id }}" name="todoImage" type="file" accept="image/*">
                                          <img id="editTodoImage" src="{{ todo.image }}" alt="Todo Image" style="max-width: 300px; height: auto; display: none;">
                                         
-                                        <img src="{{ todo.image }}" alt="Todo Image" style="max-width: 300px; height: auto;">
+                                        <img id="viewImg{{ todo.id }}" src="{{ todo.image }}" name="todoImage" style="max-width: 100px; height: auto;">
                                         <img id="imagePreview{{ todo.id }}" src="{{ todo.image }}" alt="Image Preview" style="display: none;"/>
                                     </div>
                                     <div class="setting-time">
@@ -479,7 +479,7 @@ input[type="file"] {
                                         
                                     </div>
                                     <div class="form-group">
-                                        <input id="editTodoText{{ todo.id }}" name="todoText" type="text" value="{{ todo.text_content }}">
+                                        <input id="editTodoText{{ todo.id }}" name="todoText" type="text" value="{{ todo.text_content }}"> 
                                     </div>
 
                                     <div class="export">
