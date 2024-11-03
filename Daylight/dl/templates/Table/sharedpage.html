@@ -1,0 +1,295 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'Table/main.css' %}">
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <title>TodoList</title>
+    <style>
+        .btn-memo {
+            background-color: #ffd08a;
+            border: 1px solid #ffd08a; 
+            color : #fa7617; 
+            font-weight: bold;
+        }
+        .btn-close {
+            background-color: #fdd4f9;
+            border: 1px solid #fdd4f9; 
+            color : #ff6994; 
+            font-weight: bold;
+        }
+        .btn-close-done {
+            background-color: #414141;
+            border: 1px solid #414141;
+            color : #ffffff; 
+            font-weight: bold;
+            margin : 15px;
+            margin-top : -10px;
+            float : right;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width : 20px;
+            height: 25px;
+        }
+        .btn-danger {
+            margin-left: 50px;
+            width: 35px;
+            height: 3px; /* 버튼 높이 설정 (필요에 따라 조정) */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none; /* 버튼 테두리 제거 (필요에 따라) */
+            color: white; /* 버튼 텍스트 색상 (예시) */
+            white-space: nowrap;
+            background-color: #96e0f4;
+            border: 1px solid #96e0f4; 
+            color : #3475ef; 
+            font-weight: bold;
+        }
+        .btn-danger2{
+            margin-left: 50px; 
+            width: 35px;
+            height: 20px; /* 버튼 높이 설정 (필요에 따라 조정) */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none; /* 버튼 테두리 제거 (필요에 따라) */
+            color: white; /* 버튼 텍스트 색상 (예시) */
+            white-space: nowrap;
+            background-color: #96e0f4;
+            border: 1px solid #96e0f4; 
+            color : #3475ef; 
+            font-weight: bold;
+            font-size: 12px; /* 글씨 크기 설정 (더 크게 설정) */
+    }
+    .btn-success{
+    margin-left: 178px;
+    background-color: #fff5b2;
+    border: 1px solid #fff5b2;
+    color : #ef8234; 
+    font-weight: bold;
+}
+.buttondiv {
+    margin-top : -45px;
+}
+        #doneText {
+            width: 90%;                  /* 가로 길이: 전체 부모 요소 크기 */
+            padding: 20px 20px;           /* 내부 여백: 위아래 12px, 좌우 20px */
+            margin-top : -20px;
+            box-sizing: border-box;       /* 패딩과 테두리를 포함한 크기 계산 */
+            border: 0px solid #ccc;       /* 테두리: 두께 2px, 색상 #ccc */
+            font-size: 14px;              /* 글자 크기 */
+            color: #333;                  /* 글자색 */     
+        }
+
+        .table-box2 {
+            width : 230px;
+            height: 220px;
+            border-radius: 25px;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
+            }
+         /* 모달 기본 스타일 */
+         .modal {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 25px;
+            background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 15px; /* 모서리 둥글게 */
+            border: 2px solid #ddd;
+            width: 700px;
+            height: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #f9f9f9; /* 메모장 느낌을 위한 연한 배경색 */
+        }
+        .modal-textarea {
+            width : 100%;
+            height: 330px;
+            margin-left : -10px;
+            padding : 10px;
+            border-radius: 25px;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .table-box2 {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box white-box">
+            <img src="{% static 'chikawa.png' %}" width="150px" height="130px">
+            <div class="name">Lee</div>
+            <ul class="custom-list">
+                <li><a href="{% url 'main' %}">Todo Board</a></li></li>
+                <li><a href="{% url 'timesheet' %}">Time Sheet</a></li>
+                <li><a href="{% url 'starpage' %}">Star page</a></li>
+                <li><a href="{% url 'sharedPage' %}">Shared page</a></li>
+            </ul>
+            <a href="{% url 'loginsheet' %}">
+                <button class="login-button">
+                    Login / Logout
+                </button>
+            </a>
+        </div>
+        <div class="box gray-box">
+            <div class="header-top">
+                <h1>Daylight</h1>
+                <div class="notice">
+                    <button class="notification-button">
+                    <span class="icon">&#128276;</span> <!-- 알림 아이콘 (종 모양) -->
+                </button>
+                </div>
+            </div>
+
+            <div class="date-con">
+            
+                <div class="datebox">
+                    <div class="arrow left-arrow">
+                        <button class="arrow-button">&#8592;</button> <!-- Left arrow -->
+                    </div>
+                    2024 / 08 / 02 Fri
+                    <div class="arrow right-arrow">
+                        <button class="arrow-button">&#8594;</button> <!-- Right arrow -->
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="tabel-rabelborad">
+                <div class="tabel-rabel"></div>
+                <div class="tabel-rabel">DONE</div>
+            </div>
+
+            <div class="TodoList">
+            <div class="table">
+                <form action="./createTodo/" method="POST"> {% csrf_token %}
+                <div class="table-box">
+                    <input id="todoTable" name="todoTable" type="text" placeholder="제목을 적어주세요">
+                    <input id="todoText" name="todoText" type="text" placeholder="메모할 내용을 적어주세요">
+                    <button class="btn btn-memo" type="submit">Memo</button>
+                </div> </form>
+                
+            </div>
+            
+            <div class="table">
+                {% for todo, text in todo_text_pairs %}
+                
+                <form action="./deleteTodo/" method="GET">
+                <div class="table-box">
+                    <div class="table-box2">
+                    <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" disabled>
+                    <input id="todoText" name="todoText" type="text" value="{{ todo.text_content }}" disabled>
+                    <input type="hidden" id="todoNum" name="todoNum" value="{{todo.id}}"></input>
+                    </div>
+                    <!-- 연필 모양 버튼 -->
+                    <div class="buttondiv">
+                    <button class="btn btn-close">Del
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M19.07 4.93a1 1 0 0 0-1.41 0L12 10.59 6.34 4.93a1 1 0 0 0-1.41 1.41L10.59 12l-5.66 5.66a1 1 0 0 0 1.41 1.41L12 13.41l5.66 5.66a1 1 0 0 0 1.41-1.41L13.41 12l5.66-5.66a1 1 0 0 0 0-1.41z"/>
+                        </svg>
+                    </button>
+                </form>
+                
+                <form action="./markAsDone/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="todo_id" value="{{ todo.id }}">
+                    <button type="submit" class="btn btn-success">✔</button>
+                </form>
+
+                    <a href ="./updatePage/{{ todo.id }}" class="btn btn-danger"
+                    role="button">Change</a>
+                
+                </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+            <!-- Todo 목록 -->
+            
+            <!-- 모달 창 -->
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                       
+                        <span class="close">&times;</span>
+                       
+                        <form id="editForm" action="./updateTodo/" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="editTodoId" name="todo_id"  value="{{ todo.id }}">
+                            
+                            <div class="modal-textarea">
+                                <div class="form-group">
+                                    <label for="editTodoTable">제목 : </label>
+                                    <input id="editTodoTable" name="todoTable" type="text" value="{{ todo.content }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="editTodoText"></label>
+                                    <input id="editTodoText" name="todoText" type="text" value="{{ todo.text_content }}">
+                                </div>
+
+                                <button type="submit" class="btn-memo">Save</button>
+                        </form>
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+            
+
+            <div class="table done">
+                <form action="./deleteDone/" method="GET">
+                    {% for dones in done %}
+                    <div class="table-box-done">
+                        <input id="doneTodo" name="doneTodo" type="text" value="{{ dones.content }}" disabled>
+                        <input id="doneText" name="doneText" type="text" value="{{ dones.text_content }}" disabled>
+                        <input type="hidden" id="doneNum" name="doneNum" value="{{dones.id}}"></input>
+                        <button class="btn btn-close-done">X
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.07 4.93a1 1 0 0 0-1.41 0L12 10.59 6.34 4.93a1 1 0 0 0-1.41 1.41L10.59 12l-5.66 5.66a1 1 0 0 0 1.41 1.41L12 13.41l5.66 5.66a1 1 0 0 0 1.41-1.41L13.41 12l5.66-5.66a1 1 0 0 0 0-1.41z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    {% endfor %}
+                </form>
+                
+            </div>
+        </div>
+        </div>
+    </div>
+           
+      
+
+</body>
+</html>
