@@ -89,7 +89,7 @@ function updateModalContent(tableBox2, todoId) {
         editTodoImage.style.display = "block";
         log('Updated todo image');
     } else if (editTodoImage) {
-        
+        editTodoImage.style.display = "none";
         log('Todo image not found, hiding image element');
     } else {
         log('Edit todo image element not found');
@@ -130,10 +130,79 @@ log('Modal script initialized');
 
 
 
+//done
+
+// 모달 관련 전역 변수
+var currentModal = null;
+
+// 'doneTodo' 또는 'table-box-done' 클릭 시 모달 띄우기
+document.querySelectorAll('.table-box-done').forEach(function(tableBoxDone) {
+    // table-box-done 자체 클릭 시 모달 띄우기
+    tableBoxDone.addEventListener('click', function(event) {
+        openModalDone(tableBoxDone);
+    });
+
+    // doneTodo 클릭 시 모달 띄우기
+    var clickableElements = tableBoxDone.querySelectorAll('input[id^="doneTodo"]');
+    clickableElements.forEach(function(element) {
+        element.onclick = function(event) {
+            event.preventDefault(); // 기본 동작 방지
+            openModalDone(tableBoxDone);
+        };
+    });
+});
+
+// 모달 열기 함수
+function openModalDone(tableBoxDone) {
+    var doneId = tableBoxDone.querySelector('input[id^="doneNum"]')?.value;
+    if (!doneId) {
+        console.log('Done ID not found');
+        return;
+    }
+
+    // 모달 찾기 (고유한 ID로 검색)
+    currentModal = document.getElementById(`myModal-done-${doneId}`);
+    if (!currentModal) {
+        console.log('Modal not found for ID: ' + doneId);
+        return;
+    }
+
+    // 모달 보이기
+    currentModal.style.display = "block";
+}
 
 
 
-    //별 버튼
+// 모든 닫기 버튼에 이벤트 리스너 추가
+document.querySelectorAll('.close-done').forEach(function(closeBtn) {
+    closeBtn.onclick = closeCurrentModalDone;
+});
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+    // 모달 외부를 클릭한 경우
+    if (event.target == currentModal) {
+        closeCurrentModalDone();
+    }
+};
+
+// 모달 닫기 함수
+function closeCurrentModalDone() {
+    if (currentModal) {
+        currentModal.style.display = "none";
+        currentModal = null;
+        console.log('Modal closed');
+    }
+}
+
+// 모달 스크립트 초기화 로그
+console.log('Done modal script initialized');
+
+
+
+
+
+ //별 버튼
     $('.btn-star').on('click', function(event) {
         event.preventDefault();  // 기본 form 제출 방지
     

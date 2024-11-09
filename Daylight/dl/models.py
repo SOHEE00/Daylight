@@ -1,7 +1,7 @@
 from django.db import models 
 
 def custom_upload_to(instance, filename):
-    return 'media/todo_images/{0}'.format(filename)
+    return 'todo_images/{0}'.format(filename)
 
 class Todo(models.Model):
     content = models.CharField(max_length=255)

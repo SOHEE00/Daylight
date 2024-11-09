@@ -178,6 +178,15 @@ gap : 30px;
 transform: translateX(85px);
 margin-right: 90px;
 }
+.headG {
+        display: flex;
+        align-items: center; /* 세로 정렬을 중앙에 맞추기 */
+        gap: 2px; /* 텍스트 입력과 이미지 사이의 간격 설정 */
+        text-align: left; /* 내부 요소들 왼쪽 정렬 */
+    }
+.headG .imgeee {
+    margin: 0 15px 0 0; /* 이미지 왼쪽에 여백 추가 */
+    }
 
 .tabel-rabel {
     float: right;
@@ -263,6 +272,69 @@ margin-right: 90px;
             text-decoration: none;
             cursor: pointer;
         }
+        /* 모달 기본 스타일 */
+.modal-done {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    z-index: 1000;
+    
+    width: 400px;
+    height: 400px;
+    border-radius: 25px;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 */
+}
+
+/* 모달 콘텐츠 */
+.modal-content-done {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 15px; /* 모서리 둥글게 */
+    border: 2px solid #ddd;
+    width: 700px;
+    height: 350px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #f9f9f9; /* 메모장 느낌을 위한 연한 배경색 */
+}
+
+
+
+/* 닫기 버튼 */
+.close-done {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-done:hover,
+.close-done:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 이미지 미리보기 스타일 (필요시 추가) */
+.modal-content-done img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+
+/* 버튼 스타일 */
+.modal-content-done button {
+    background-color: #4CAF50; /* 버튼 배경 색상 */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.modal-content-done button:hover {
+    background-color: #45a049; /* 버튼 호버 효과 */
+}
 
         .table-box2 {
             cursor: pointer;
@@ -412,9 +484,16 @@ input[type="file"] {
                 <form action="./deleteTodo/" method="GET">
                 <div class="table-box">
                     <div class="table-box2">
-                    <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" >
+
+                        <div class="headG">
+                            <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" >
+                            {% if todo.image %}
+                            <img src="{% static 'imgeee.png' %}" name="imgeee" width="25px" height="20px" class="imgeee">
+                            {% endif %}
+                        </div>
+                    
                     <input id="todoText" name="todoText" type="text" value="{{ todo.text_content }}" >
-                    <img id="todoimg" src="{{ todo.image }}" alt="Todo Image" style="max-width: 30px; height: auto;">
+                    <img id="todoimg" src="{% if todo.image %}{{ todo.image.url }}{% endif %}" alt="Todo Image" style="max-width: 30px; height: auto; display: none;">
                     <input type="hidden" id="todoNum" name="todoNum" value="{{todo.id}}"></input>
                     </div>
                     <!-- 연필 모양 버튼 -->
@@ -497,28 +576,46 @@ input[type="file"] {
                
             
 
-            <div class="table done">
+                <div class="table done">
                     {% for done in done_todos %}
                     <div class="table-box-done">
                         <input id="doneTodo" name="doneTodo" type="text" value="{{ done.content }}" disabled>
-                        <input id="doneText" name="doneText" type="text" value="{{ done.text_content }}" disabled>
-
-                        <form action="./deleteDone/" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" id="doneNum" name="doneNum" value="{{ done.id }}"></input>
-                        <button class="btn btn-close-done"> <img src="{% static 'delete.png' %}" alt="import" style="width: 16px; height: 16px; margin-right: 0px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M19.07 4.93a1 1 0 0 0-1.41 0L12 10.59 6.34 4.93a1 1 0 0 0-1.41 1.41L10.59 12l-5.66 5.66a1 1 0 0 0 1.41 1.41L12 13.41l5.66 5.66a1 1 0 0 0 1.41-1.41L13.41 12l5.66-5.66a1 1 0 0 0 0-1.41z"/>
-                            </svg>
-                        </button>
-                        </form>
                         
-                      
+                
+                        <form action="./deleteDone/" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="doneNum" name="doneNum" value="{{ done.id }}">
+                            <button class="btn btn-close-done">
+                                <img src="{% static 'delete.png' %}" alt="import" style="width: 16px; height: 16px; margin-right: 0px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M19.07 4.93a1 1 0 0 0-1.41 0L12 10.59 6.34 4.93a1 1 0 0 0-1.41 1.41L10.59 12l-5.66 5.66a1 1 0 0 0 1.41 1.41L12 13.41l5.66 5.66a1 1 0 0 0 1.41-1.41L13.41 12l5.66-5.66a1 1 0 0 0 0-1.41z"/>
+                                </svg>
+                            </button>
+                        </form>
+                
+                        <!-- Done Modal-->
+                        <div id="myModal-done-{{ done.id }}" class="modal-done" style="display: none;">
+                            <div class="modal-content-done">
+                                <span class="close-done">&times;</span>
+                                    <input type="hidden" id="editDoneId{{ done.id }}" name="editDoneId" value="{{ done.id }}">
+                
+                                    <label for="editDoneTodo{{ done.id }}">Todo Content:</label>
+                                    <input id="editDoneTodo{{ done.id }}" name="editDoneTodo" type="text" value="{{ done.content }}">
+                
+                                    
+                
+                
+                                <!-- View Image Preview in Modal -->
+                                <div>
+                                    <h4>View Image:</h4>
+                                    <img id="viewDoneImg{{ done.id }}" src="{% if done.image %}{{ done.image.url }}{% endif %}" style="width: 100px;">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     {% endfor %}
-               
+                </div>
                 
-            </div>
         </div>
         </div>
     </div>
