@@ -41,8 +41,8 @@
             border: 1px solid whitesmoke;
             color : #ffffff; 
             font-weight: bold;
-            margin : 0 10px 0 0;
-            margin-top : -3px;
+            margin : 15px;
+            margin-top : -10px;
             float : right;
             display: flex;
             align-items: center;
@@ -105,35 +105,7 @@
     height: 30px;
     border-radius: 20px;
 }
-.custom-list {
-    list-style: none; /* Remove default list style */
-    padding: 0; /* Remove default padding */
-    margin: 10px; /* Remove default margin */
-    }
-.custom-list li {
-    font-size: 18px; /* Increase font size */
-    margin: -25px; /* Add some space between items */
-    color: rgb(130, 130, 130);
-    padding: 7px; /* Add padding to expand clickable area */
-    display: block; /* Make the entire list item a block element */
-    cursor: pointer; /* Change cursor to indicate clickable area */
-    }
-.custom-list img {
-    margin-right: 10px; /* 이미지와 텍스트 사이의 간격 */
-}
-.login-button {
-display: flex;
-justify-content: center; /* 가로 방향 가운데 정렬 */
-background: none; /* 배경 제거 */
-border: none; /* 테두리 제거 */
-font: inherit; /* 부모 요소의 폰트 상속 */
-color: inherit; /* 부모 요소의 색상 상속 */
-cursor: pointer; /* 클릭 가능 커서 */
-position: absolute;
-bottom: 30px; /* 하단으로부터의 거리 설정 */
-margin-left: -70px;
 
-}
 .search-form {
     display: flex; /* flexbox 레이아웃 적용 */
     align-items: center; /* 수직 중앙 정렬 */
@@ -164,12 +136,11 @@ margin-left: -70px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
 }
 .import-box{
     width: 85px;
     height: 30px;
-    margin: 100px 55px 0 0;
+    margin: 100px 100px 0 0;
     background-color: whitesmoke;
     border: 1px solid #ccc;
     border-radius: 15px; /* 테두리를 둥글게 설정 */
@@ -190,12 +161,17 @@ margin-left: -70px;
     align-items: center; /* 세로 중앙 정렬 */
     justify-content: center;
 }
-
+.text {
+    margin : 25px;
+    margin-top: -30px;
+    margin-left: 400px;
+}
 .table-box{
-    width : 235px;
-    height: 245px;
+width : 230px;
+height: 220px;
+margin-left: 130px;
 border-radius: 25px;
-background-color: rgb(255, 255, 255);
+background-color: rgb(255, 229, 177);
 box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
 }
 .table.done {
@@ -204,7 +180,7 @@ flex-direction: column;
 width : 150px;
 gap : 30px;
 transform: translateX(85px);
-margin-left: 50px;
+margin-right: 90px;
 }
 .headG {
         display: flex;
@@ -221,7 +197,7 @@ margin-left: 50px;
     font-size: 20px;
     font-weight: bold;
     margin-top: 5px;
-    right: 100px;
+    margin-right: 45px;
 }
 
 .btn-star{
@@ -247,22 +223,13 @@ margin-left: 50px;
         }
 
         .table-box2 {
-            width : 235px;
-            height: 245px;
-            border-radius: 25px;
-            background-color: rgb(255, 255, 255);
-            box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
-            }
-
-        .table-box3 {
-            width : 130px;
+            width : 230px;
             height: 220px;
             border-radius: 25px;
             background-color: rgb(255, 255, 255);
             box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
-            margin-left: -30px;
-        }
-        
+            }
+            
          /* 모달 기본 스타일 */
          .modal {
             display: none; /* 기본적으로 숨김 */
@@ -438,7 +405,6 @@ input[type="file"] {
     font-weight: bold;
 }
 
-
     </style>
 </head>
 <body>
@@ -482,19 +448,25 @@ input[type="file"] {
                         <img src="{% static 'import.png' %}" alt="import" style="width: 16px; height: 16px; margin-right: 0px;">
                     </button>
                 </div>
-
-
+                
+            </div>
+            
+            <div class="text">
+                ＊검색된 내용입니다＊
+                <a href="{% url 'main' %}">
+                    <div class="back"> <img src="{% static 'back.png' %}" alt="back" style="width: 30px; height: 30px; margin-right: 0px;"></div>
+                </a>
             </div>
 
             <div class="date-con">
             
                 <div class="datebox">
                     <div class="arrow left-arrow">
-                        <button class="arrow-button">&#8592;</button> <!-- Left arrow -->
+                        <button class="arrow-button">
                     </div>
-                    <p id="currentDateTime">현재 날짜와 시간이 여기에 표시됩니다.</p>
+                   
                     <div class="arrow right-arrow">
-                        <button class="arrow-button">&#8594;</button> <!-- Right arrow -->
+                        <button class="arrow-button">
                     </div>
                 </div>
                 
@@ -502,73 +474,54 @@ input[type="file"] {
 
             <div class="tabel-rabelborad">
                 
-                <div class="tabel-rabel">DONE</div>
-            </div>
-
-            <div class="TodoList">
-            <div class="table">
-                <form action="./createTodo/" method="POST"> {% csrf_token %}
-                <div class="table-box">
-                    <input id="todoTable" name="todoTable" type="text" placeholder="제목을 적어주세요">
-                    <p><input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time }}" ></p>
-                    <input id="todoText" name="todoText" type="text" placeholder="메모할 내용을 적어주세요">
-                    <button class="btn btn-memo" type="submit">Memo</button>
-                </div> </form>
-                
-            </div>
-            
-            <div class="table">
-                {% for todo in todos %}
-                
-                <form action="./deleteTodo/" method="GET">
-                <div class="table-box3">
-                    <div class="table-box2">
-
-                        <div class="headG">
-                            <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" >
-
-                            {% if todo.image %}
-                            <img src="{% static 'imgeee.png' %}" name="imgeee" width="25px" height="20px" class="imgeee">
-                            {% endif %}
-                        </div>
-                    {% if todo.time != '00:00' %}
-                    <input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time }}" style="margin-left: 10px;" >
-                    {% endif %}
-                    <input id="todoText" name="todoText" type="text" value="{{ todo.text_content }}" >
-                    <img id="todoimg" src="{% if todo.image %}{{ todo.image.url }}{% endif %}" alt="Todo Image" style="max-width: 30px; height: auto; display: none;">
-                    <input type="hidden" id="todoNum" name="todoNum" value="{{todo.id}}"></input>
-                    </div>
-                    <!-- 연필 모양 버튼 -->
-                    <div class="buttondiv">
-                    <button class="btn btn-close">Del
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M19.07 4.93a1 1 0 0 0-1.41 0L12 10.59 6.34 4.93a1 1 0 0 0-1.41 1.41L10.59 12l-5.66 5.66a1 1 0 0 0 1.41 1.41L12 13.41l5.66 5.66a1 1 0 0 0 1.41-1.41L13.41 12l5.66-5.66a1 1 0 0 0 0-1.41z"/>
-                        </svg>
-                    </button>
-                </form>
-                
-                <a href ="./updatePage/{{ todo.id }}" class="btn btn-danger"
-                role="button">Change</a>
-                <form action="./markAsDone/" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="todo_id" value="{{ todo.id }}">
-                    
-                    <button type="submit" class="btn-success">✔</button>
-                    
-                </form>
-                <form class="star-form" action="./markAsStar/" method="POST" data-todo-id="{{ todo.id }}">
-                    {% csrf_token %}
-                    <input type="hidden" name="todo_id" value="{{ todo.id }}">
-                    <button type="submit" class="btn-star">☆</button>
-                </form>    
-                </div>
                
-                </div>
-                {% endfor %}
-                
             </div>
-            <!-- Todo 목록 -->
+
+          
             
+            <div class="table">
+                {% if todos %}
+                    {% for todo in todos %}
+                        <form action="./deleteTodo/" method="GET">
+                            <div class="table-box">
+                                <div class="table-box2">
+                                    <div class="headG">
+                                        <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" readonly>
+                                        {% if todo.image %}
+                                            <img src="{% static 'imgeee.png' %}" name="imgeee" width="25px" height="20px" class="imgeee">
+                                        {% endif %}
+                                    </div>
+                                
+                                    <input id="todoText" name="todoText" type="text" value="{{ todo.text_content }}" readonly>
+                                    <img id="todoimg" src="{% if todo.image %}{{ todo.image.url }}{% endif %}" alt="Todo Image" style="max-width: 30px; height: auto; display: none;">
+                                    <input type="hidden" id="todoNum" name="todoNum" value="{{ todo.id }}">
+                                </div>
+                                <div class="buttondiv">
+                                    <button class="btn btn-close">Del
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                            <path d="M19.07 4.93a1 1 0 0 0-1.41 0L12 10.59 6.34 4.93a1 1 0 0 0-1.41 1.41L10.59 12l-5.66 5.66a1 1 0 0 0 1.41 1.41L12 13.41l5.66 5.66a1 1 0 0 0 1.41-1.41L13.41 12l5.66-5.66a1 1 0 0 0 0-1.41z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            
+                                <a href ="./updatePage/{{ todo.id }}" class="btn btn-danger" role="button">Change</a>
+                                <form action="./markAsDone/" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="todo_id" value="{{ todo.id }}">
+                                    <button type="submit" class="btn-success">✔</button>
+                                </form>
+                                <form class="star-form" action="./markAsStar/" method="POST" data-todo-id="{{ todo.id }}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="todo_id" value="{{ todo.id }}">
+                                    <button type="submit" class="btn-star">☆</button>
+                                </form>    
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p></p>
+                {% endif %}
+            </div>
             
                 <!-- 모달 창 -->
                 
@@ -592,15 +545,12 @@ input[type="file"] {
                                         <input id="todoImage{{ todo.id }}" name="todoImage" type="file" accept="image/*">
                                          <img id="editTodoImage" src="{{ todo.image }}" alt="Todo Image" style="max-width: 300px; height: auto; display: none;">
                                         
-                                        <img id="viewImg{{ todo.id }}" src="{{ todo.image }}" name="todoImage" style="max-width: 200px; height: auto;">
+                                        <img id="viewImg{{ todo.id }}" src="{{ todo.image }}" name="todoImage" style="max-width: 100px; height: auto;">
                                         <img id="imagePreview{{ todo.id }}" src="{{ todo.image }}" alt="Image Preview" style="display: none;"/>
                                     </div>
                                     <div class="setting-time">
-                                        <div class="form-group">
-                                            
-                                            <p><input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time|slice:':5' }}" ></p>
-                                
-                                        </div>
+                                            <p><input type="time" id="time" value="" min="" max=""></p>
+                                        
                                     </div>
                                     <div class="form-group">
                                         <input id="editTodoText{{ todo.id }}" name="todoText" type="text" value="{{ todo.text_content }}"> 
@@ -619,13 +569,10 @@ input[type="file"] {
                     </div>
                 </div>
                
-            
-
                 <div class="table done">
                     {% for done in done_todos %}
                     <div class="table-box-done">
                         <input id="doneTodo" name="doneTodo" type="text" value="{{ done.content }}" disabled>
-                        
                 
                         <form action="./deleteDone/" method="POST">
                             {% csrf_token %}
@@ -642,13 +589,10 @@ input[type="file"] {
                         <div id="myModal-done-{{ done.id }}" class="modal-done" style="display: none;">
                             <div class="modal-content-done">
                                 <span class="close-done">&times;</span>
-                                    <input type="hidden" id="editDoneId{{ done.id }}" name="editDoneId" value="{{ done.id }}">
+                                <input type="hidden" id="editDoneId{{ done.id }}" name="editDoneId" value="{{ done.id }}">
                 
-                                    <label for="editDoneTodo{{ done.id }}">제목:</label>
-                                    <input id="editDoneTodo{{ done.id }}" name="editDoneTodo" type="text" value="{{ done.content }}">
-                
-                                    
-                
+                                <label for="editDoneTodo{{ done.id }}">제목:</label>
+                                <input id="editDoneTodo{{ done.id }}" name="editDoneTodo" type="text" value="{{ done.content }}">
                 
                                 <!-- View Image Preview in Modal -->
                                 <div>
@@ -661,6 +605,9 @@ input[type="file"] {
                     {% endfor %}
                 </div>
                 
+
+
+
         </div>
         </div>
     </div>

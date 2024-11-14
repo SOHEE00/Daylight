@@ -38,23 +38,56 @@ font-weight: bold;
 }
 
 .custom-list {
-list-style: none; /* Remove default list style */
-padding: 0; /* Remove default padding */
-margin: 0; /* Remove default margin */
-margin-top: 40px;
-}
-
+    list-style: none; /* Remove default list style */
+    padding: 0; /* Remove default padding */
+    margin: 10px; /* Remove default margin */
+    }
 .custom-list li {
-font-size: 18px; /* Increase font size */
-margin: 35px; /* Add some space between items */
-color: rgb(130, 130, 130);
+    font-size: 18px; /* Increase font size */
+    margin: -25px; /* Add some space between items */
+    color: rgb(130, 130, 130);
+    padding: 7px; /* Add padding to expand clickable area */
+    display: block; /* Make the entire list item a block element */
+    cursor: pointer; /* Change cursor to indicate clickable area */
+    }
+.custom-list li a {
+    align-items: center; /* Center-aligns image and text vertically */
+    text-decoration: none; /* Optional: Remove underline from links */
+    color: inherit;
 }
-.custom-list li:hover {
-color: rgb(67, 67, 67);
-font-weight: bold;
+.custom-list span {
+    text-decoration: line-through; /* Adds a line through the text */
 }
+.custom-list li a img {
+    margin-right: 10px; /* Adds space between image and text */
+}
+.login-button {
+    display: flex;
+    justify-content: center; /* 가로 방향 가운데 정렬 */
+    background: none; /* 배경 제거 */
+    border: none; /* 테두리 제거 */
+    font: inherit; /* 부모 요소의 폰트 상속 */
+    color: inherit; /* 부모 요소의 색상 상속 */
+    cursor: pointer; /* 클릭 가능 커서 */
+    position: absolute;
+    bottom: 30px; /* 하단으로부터의 거리 설정 */
+    margin-left: -70px;
+}
+a {
+    text-decoration: none;
+    color : rgb(130, 130, 130);
+    font-size: 18px; /* Increase font size */
+}
+    .custom-list li:hover {
+    color: #ff4476;
+    font-weight: bold;
+    }
+    .custom-list a:hover {
+        color: #ff4476;
+        font-weight: bold;
+        }
 .gray-box {
-width: 1000px;
+width: 1100px;
 display: flex;
 flex-direction: column; /* Stack children vertically */
 background-color: #f4f8fb;
@@ -90,16 +123,7 @@ align-items: center;
 justify-content: center;
 text-align: center; 
 }
-.login-button {
-    display: flex;
-    justify-content: center; /* 가로 방향 가운데 정렬 */
-    background: none; /* 배경 제거 */
-    border: none; /* 테두리 제거 */
-    cursor: pointer; /* 클릭 가능 커서 */
-    position: absolute;
-    bottom: 30px; /* 하단으로부터의 거리 설정 */
-    margin-left: -70px;
-}
+
 .arrow-button {
 display: inline-flex;
 align-items: center;
@@ -185,13 +209,15 @@ margin-left: 15px;
 border-radius: 10px;
 }
 .calendar{
-background-color: orangered;
-width: 900px;
-height: 200px;
+
 }
 .calendercon{
 display: flex;
 
+}
+.calendar img {
+    margin-left: 150px;
+    margin-top: 20px;
 }
 .label {
 margin-left: 10px; 
@@ -211,3 +237,5 @@ border-radius: 50px;
 #check-btn { display: none; }
 #check-btn:checked ~ .menubars { display: block; } 
 .menubars { display: none; }
+
+

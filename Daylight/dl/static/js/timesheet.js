@@ -37,3 +37,47 @@ function toggleMemoBox(button) {
 function toggleDoneBox(button) {
     toggleBox(button, ".timebox2", "white");  // 글씨 색상을 흰색으로 설정
 }
+
+
+
+  // 현재 날짜와 시간을 가져오기
+  function displayCurrentDateTime() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    const formattedDateTime = `${year}-${month}-${day}`;
+    document.getElementById("currentDateTime").textContent = ` ${formattedDateTime}`;
+}
+
+// 함수 호출하여 날짜와 시간 표시
+displayCurrentDateTime();
+
+
+//12월 달력 임시
+
+function createCalendar() {
+    const calendarBody = document.getElementById('calendarBody');
+    const daysInDecember = 31;
+    const startDay = 0; // 12월 1일은 일요일
+
+    // 첫 주 빈칸 채우기
+    for (let i = 0; i < startDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('day', 'empty');
+        calendarBody.appendChild(emptyCell);
+    }
+
+    // 날짜 채우기
+    for (let day = 1; day <= daysInDecember; day++) {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('day');
+        dayCell.textContent = day;
+        calendarBody.appendChild(dayCell);
+    }
+}
+
+// 함수 호출하여 달력 생성
+createCalendar();

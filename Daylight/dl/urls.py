@@ -30,6 +30,7 @@ urlpatterns = [
     path('markAsStar/',views.markStar, name='markAsStar'),
     path('deleteDone/',views.delete_done,name='delete_done'),
     path('updateModal/', views.update_modal, name='update_modal'),
+    path('search/', views.search_view, name='search'),  # 검색 뷰에 연결
     path('timesheet/', views.timesheet, name='timesheet'),
     path('starpage/', views.starpage, name='starpage'),
     path('starpage/Delete_Star/',views.delete_star, name='delete_star'),

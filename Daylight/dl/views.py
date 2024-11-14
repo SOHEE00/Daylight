@@ -3,7 +3,9 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
+from django.db.models import Q
 from django.core.files.storage import default_storage
+from datetime import time
 from .models import *
 
 def index(request) :
@@ -11,6 +13,7 @@ def index(request) :
     done_todos = Todo.objects.filter(done=True)
     content = {'todos': todos, 'done_todos': done_todos}
     return render(request,'Table/main.html',content)
+
 
 def Create_todo(request) :
     todo_content = request.POST['todoTable']
@@ -31,7 +34,7 @@ def Todo_delete(request) :
 
 def Todo_update(request, todo_id) :
     todo = Todo.objects.get(id=todo_id)
-    todos = Todo.objects.all()
+    todos = Todo.objects.filter(done=False)
     content = {'todos':todos}
     return render(request, 'Table/updatePage.html', content)
 
@@ -109,9 +112,21 @@ def update_modal(request) :
     # POST가 아닌 요청에 대한 처리
     
 
-
-
-
+def search_view(request):
+    query = request.GET.get('q', '')
+     # 검색어에 해당하는 일반 Todo 항목 필터링
+    todos = Todo.objects.filter(
+        Q(content__icontains=query) | Q(text_content__icontains=query), done=False
+    )
+    # 검색어에 해당하는 완료된 Todo 항목 필터링
+    done_todos = Todo.objects.filter(
+        Q(content__icontains=query) | Q(text_content__icontains=query), done=True
+    )
+    return render(request, 'Table/search.html', {
+        'todos': todos,
+        'done_todos': done_todos,
+        'query': query
+    })
 
 
 

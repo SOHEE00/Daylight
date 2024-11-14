@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'Table/main.css' %}">
+    <link rel="stylesheet" href="{% static 'Table/star.css' %}">
     <script src="{% static 'js/main.js' %}" defer></script>
     <title>TodoList</title>
     <style>
@@ -15,7 +15,19 @@
     flex-wrap: wrap; /* Allows items to wrap to the next line */
     gap: 45px; /* Adjust spacing between items as needed */
 }
-
+.custom-list {
+    list-style: none; /* Remove default list style */
+    padding: 0; /* Remove default padding */
+    margin: 10px; /* Remove default margin */
+    }
+.custom-list li {
+    font-size: 18px; /* Increase font size */
+    margin: -25px; /* Add some space between items */
+    color: rgb(130, 130, 130);
+    padding: 7px; /* Add padding to expand clickable area */
+    display: block; /* Make the entire list item a block element */
+    cursor: pointer; /* Change cursor to indicate clickable area */
+    }
 .table-box {
     display: flex;
     flex-direction: column;
@@ -113,8 +125,8 @@
         }
 
         .table-box2 {
-            width : 230px;
-            height: 220px;
+            width : 220px;
+            height: 180px;
             border-radius: 25px;
             background-color: rgb(255, 255, 255);
             box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
@@ -169,6 +181,11 @@
         .table-box2 {
             cursor: pointer;
         }
+        .star {
+            font-size: 45px;      /* 별 크기 */
+            color: #ffa600;       /* 황금색 */
+            margin-left : -30px;
+        }
     </style>
 </head>
 <body>
@@ -177,10 +194,10 @@
             <img src="{% static 'chikawa.png' %}" width="150px" height="130px">
             <div class="name">Lee</div>
             <ul class="custom-list">
-                <li><a href="{% url 'main' %}">Todo Board</a></li></li>
-                <li><a href="{% url 'timesheet' %}">Time Sheet</a></li>
-                <li><a href="{% url 'starpage' %}">Star page</a></li>
-                <li><a href="{% url 'sharedPage' %}">Shared page</a></li>
+                <li><a href="{% url 'main' %}"><img src="{% static 'memo.png' %}" alt="memo" style="width: 25px; height: 25px;">Daylight</a></li>
+                <li><a href="{% url 'timesheet' %}"><img src="{% static 'time.png' %}" alt="time" style="width: 25px; height: 25px;">Time Sheet</a></li>
+                <li><a href="{% url 'starpage' %}"><img src="{% static 'button_star.png' %}" alt="star" style="width: 25px; height: 25px;">Star page</a></li>
+                <li><a href="{% url 'sharedPage' %}"><img src="{% static 'people.png' %}" alt="people" style="width: 25px; height: 25px;"><span>Shared page</span></a></li>
             </ul>
             <a href="{% url 'loginsheet' %}">
                 <button class="login-button">
@@ -192,28 +209,17 @@
             <div class="header-top">
                 <h1>Daylight</h1>
                 <div class="notice">
-                    <button class="notification-button">
-                    <span class="icon">&#128276;</span> <!-- 알림 아이콘 (종 모양) -->
+                    
+                    <div class="star"><img src="{% static 'border_star.png' %}" alt="star" style="width: 40px; height: 35px;"></div>
                 </button>
                 </div>
             </div>
 
-            <div class="date-con">
-            
-                <div class="datebox">
-                    <div class="arrow left-arrow">
-                        <button class="arrow-button">&#8592;</button> <!-- Left arrow -->
-                    </div>
-                    2024 / 08 / 02 Fri
-                    <div class="arrow right-arrow">
-                        <button class="arrow-button">&#8594;</button> <!-- Right arrow -->
-                    </div>
-                </div>
+          
                 
-            </div>
-
             
 
+            
             <div class="TodoList">
             
                 <div class="table">
@@ -234,7 +240,7 @@
                         <form action="./Delete_Star/" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="todo_id" value="{{ todo.id }}">
-                            <button type="submit" class="btn-star">★</button>
+                            <button type="submit" class="btn-star"><img src="{% static 'button_star.png' %}" alt="star" style="width: 25px; height: 25px;"></button>
                         </form>    
                     </div>
                        

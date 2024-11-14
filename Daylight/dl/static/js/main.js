@@ -52,8 +52,10 @@ function updateModalContent(tableBox2, todoId) {
     var todoContent = tableBox2.querySelector('input[id^="todoTable"]')?.value || '';
     var todoText = tableBox2.querySelector('input[id^="todoText"]')?.value || '';
     var todoImage = tableBox2.querySelector('img[id^="todoimg"]')?.src;
+    //var todoTime = tableBox2.querySelector('input[id^="todoTime"]')?.value || '';
 
     console.log('todoImage___:', todoImage);
+    console.log('todoTime:', todoTime);
 
    
 
@@ -62,6 +64,8 @@ function updateModalContent(tableBox2, todoId) {
    
     var editTodoImage = currentModal.querySelector(`[id^="editTodoImage"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoText"]');
     var editTodoId = currentModal.querySelector(`[id^="editTodoId"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoId"]');
+
+    var editTodoTime = currentModal.querySelector(`[id^="todoTime"][id$="${todoId}"]`) || currentModal.querySelector('[id^="todoTime"]');
 
     var viewImage = currentModal.querySelector(`[id^="viewImg"][id$="${todoId}"]`) || currentModal.querySelector('[id^="viewImg"]');
 
@@ -72,6 +76,7 @@ function updateModalContent(tableBox2, todoId) {
         console.log('editTodoTable:', editTodoTable.value);
         console.log('todoText:', todoText);
         console.log('todoImage:', todoImage);
+        console.log('todoTime:', editTodoTime.value);
 
     } else {
         log('Edit todo table input not found');
@@ -99,6 +104,9 @@ function updateModalContent(tableBox2, todoId) {
     }
     if(viewImage){
         viewImage.src = todoImage;
+    }
+    if(editTodoTime){
+        editTodoTime.value = todoTime;
     }
 }
 
@@ -169,6 +177,7 @@ function openModalDone(tableBoxDone) {
 
     // 모달 보이기
     currentModal.style.display = "block";
+    log('Modal Done displayed');
 }
 
 
@@ -191,7 +200,7 @@ function closeCurrentModalDone() {
     if (currentModal) {
         currentModal.style.display = "none";
         currentModal = null;
-        console.log('Modal closed');
+        log('Modal closed');
     }
 }
 
@@ -264,3 +273,17 @@ document.getElementById('todoImage').addEventListener('change', function(event) 
 });
 
 
+  // 현재 날짜와 시간을 가져오기
+  function displayCurrentDateTime() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    const formattedDateTime = `${year}-${month}-${day}`;
+    document.getElementById("currentDateTime").textContent = ` ${formattedDateTime}`;
+}
+
+// 함수 호출하여 날짜와 시간 표시
+displayCurrentDateTime();

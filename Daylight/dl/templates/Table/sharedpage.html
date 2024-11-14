@@ -151,10 +151,10 @@
             <img src="{% static 'chikawa.png' %}" width="150px" height="130px">
             <div class="name">Lee</div>
             <ul class="custom-list">
-                <li><a href="{% url 'main' %}">Todo Board</a></li></li>
-                <li><a href="{% url 'timesheet' %}">Time Sheet</a></li>
-                <li><a href="{% url 'starpage' %}">Star page</a></li>
-                <li><a href="{% url 'sharedPage' %}">Shared page</a></li>
+                <li><a href="{% url 'main' %}"><img src="{% static 'memo.png' %}" alt="memo" style="width: 25px; height: 25px;">Daylight</a></li>
+                <li><a href="{% url 'timesheet' %}"><img src="{% static 'time.png' %}" alt="time" style="width: 25px; height: 25px;">Time Sheet</a></li>
+                <li><a href="{% url 'starpage' %}"><img src="{% static 'button_star.png' %}" alt="star" style="width: 25px; height: 25px;">Star page</a></li>
+                <li><a href="{% url 'sharedPage' %}"><img src="{% static 'people.png' %}" alt="people" style="width: 25px; height: 25px;"><span>Shared page</span></a></li>
             </ul>
             <a href="{% url 'loginsheet' %}">
                 <button class="login-button">

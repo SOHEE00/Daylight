@@ -111,7 +111,7 @@ cursor: not-allowed;       /* 비활성화시 커서 모양 */
 }
 
 #todoTable {
-width: 90%;                  /* 가로 길이: 전체 부모 요소 크기 */
+width: 75%;                  /* 가로 길이: 전체 부모 요소 크기 */
 padding: 10px 20px;           /* 내부 여백: 위아래 12px, 좌우 20px */
 margin: 10px;                /* 외부 여백: 위아래 8px */
 box-sizing: border-box;       /* 패딩과 테두리를 포함한 크기 계산 */
@@ -123,20 +123,9 @@ font-weight: bold;
 color: #333;                  /* 글자색 */
 transition: border-color 0.3s ease, box-shadow 0.3s ease; /* 테두리와 그림자 효과 */
 }
-/* input placeholder 스타일 */
-#todoTable::placeholder {
-    color: #aaa;                  /* 플레이스홀더 텍스트 색상 */
-    opacity: 1;                   /* 투명도 설정 */
-}
 
-/* input 비활성화 시 스타일 */
-#todoTable:disabled {
-            /* 비활성화 시 테두리 색상 */
-    color: rgb(97, 97, 97);                  /* 비활성화 시 글자색 */
-    cursor: not-allowed;          /* 비활성화 시 커서 모양 */
-}
 
-#todoText {
+#todoText{
 width: 90%;                  /* 가로 길이: 전체 부모 요소 크기 */
 padding: 40px 20px;           /* 내부 여백: 위아래 12px, 좌우 20px */
 margin: 10px;                /* 외부 여백: 위아래 8px */
@@ -154,62 +143,33 @@ color: #aaa;                  /* 플레이스홀더 텍스트 색상 */
 opacity: 1;                   /* 투명도 설정 */
 }
 
-/* input 비활성화 시 스타일 */
-#todoText:disabled {
-           /* 비활성화 시 테두리 색상 */
-color: rgb(97, 97, 97);                  /* 비활성화 시 글자색 */
-cursor: not-allowed;          /* 비활성화 시 커서 모양 */
-}
 
-#todoURL:disabled {
-        /* 비활성화 시 테두리 색상 */
-color: rgb(97, 97, 97);              /* 비활성화 시 글자색 */
-cursor: not-allowed;   
-}
 .box {
 height: 700px;
 border-radius: 15px;
 }
-#todoTime{
-    margin: 0; /* Remove default margin */
-    padding: 0; /* Adjust padding to reduce space inside the input */
-    margin-left : 15px;
-}
-
-/* Optional: Adjust the input field's container margin */
-.table-box p {
-    margin: 0; /* Remove margin around the time input */
-}
-
-/* Optional: Further reduce space between all elements */
-.table-box input {
-    margin-bottom: 10px; /* Add or reduce margin between the input fields */
-}
-
-/* Ensure the time input doesn't cause extra vertical spacing */
-.headG input[type="text"] {
-    margin-bottom: 10px; /* Reduces the gap between content text input and time input */
-    margin : 15px;
-}
 
 /* done */
 #doneTodo {
-    width: 70%;                   /* 가로 길이: 전체 부모 요소 크기 */
+    width: 90%;                   /* 가로 길이: 전체 부모 요소 크기 */
     padding: 10px 20px;           /* 내부 여백: 위아래 10px, 좌우 20px */
-    margin: 0 0 0 15px;
-    margin-top: 20px;              /* 외부 여백: 위아래 10px */
+    margin: 0 0 0 5px;
+    margin-top: 35px;              /* 외부 여백: 위아래 10px */
     box-sizing: border-box;       /* 패딩과 테두리를 포함한 크기 계산 */
     background-color: rgb(197, 197, 197);
     border-radius: 8px;           /* 모서리 둥글게 처리 */
     border: rgb(197, 197, 197);
-    font-size: 13px;              /* 글자 크기 */
+    font-size: 15px;              /* 글자 크기 */
     font-weight: bold;
     color: #333;                  /* 글자색 */
-    text-align: center;           /* 텍스트 가로 정렬: 가운데 */ 
+    
+    text-align: center;           /* 텍스트 가로 정렬: 가운데 */
+    
     display: flex;                /* flexbox 사용 */
     justify-content: center;      /* 세로 가운데 정렬 */
     align-items: center;          /* 수평 가운데 정렬 */
 }
+
     
 
     
@@ -223,10 +183,7 @@ border-radius: 8px;           /* 모서리 둥글게 처리 */
 font-size: 14px;              /* 글자 크기 */
 color: #333;                  /* 글자색 */
 }
-.back {
-    margin-top: -30px;
-    margin-left: -350px;
-}
+
 
 .white-box {
 width: 250px;
@@ -261,9 +218,6 @@ color :#333;
 .custom-list img {
     margin-right: 10px; /* 이미지와 텍스트 사이의 간격 */
 }
-.custom-list span {
-    text-decoration: line-through; /* Adds a line through the text */
-}
 .login-button {
     display: flex;
     justify-content: center; /* 가로 방향 가운데 정렬 */
@@ -281,19 +235,19 @@ a {
     color : rgb(130, 130, 130);
     font-size: 18px; /* Increase font size */
 }
-.custom-list li:hover {
-color: #ff4476;
-font-weight: bold;
-}
-.custom-list a:hover {
+    .custom-list li:hover {
     color: #ff4476;
     font-weight: bold;
     }
+    .custom-list a:hover {
+        color: #ff4476;
+        font-weight: bold;
+        }
 .gray-box {
 width: 1000px;
 display: flex;
 flex-direction: column; /* Stack children vertically */
-background-color: #f4f8fb;
+background-color: rgb(255, 229, 177);
 }
 
 .header {
@@ -317,7 +271,6 @@ color : #090f32;
 }
 .datebox {
 margin : 50px;
-margin-left: 30px;
 margin-top: -40px;
 height: 35px;
 width: 200px;
@@ -330,29 +283,22 @@ gap : 10px;
 font-weight: bold;
 }
 
+
 .table {
     display: flex;
+    flex-direction: column;
     width: 250px;
     height: 500px;
     gap: 30px;
-    flex-wrap: wrap; /* 항목이 넘치면 줄 바꿈 */
     transform: translateX(-100px);
 }
-.todo-item {
-    width: calc(50% - 20px); /* 한 줄에 두 개씩 표시 */
-    box-sizing: border-box; /* 여백을 포함한 크기 계산 */
-    margin-bottom: 20px; /* 아래쪽 여백 */
-    margin : 30px;
-}
 
-.table-box{
-width : 230px;
-height: 220px;
-border-radius: 25px;
-background-color: rgb(255, 255, 255);
-box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
-}
 
+.url-box {
+width: 150px;
+height: 180px;
+
+}
 .table.done {
 display: flex;
 flex-direction: column;
@@ -362,35 +308,19 @@ transform: translateX(100px);
 }
 
 .table-box-done {
-    width: 100px;
-    height: 75px;
+    width: 130px;
+    height: 105px;
     border-radius: 25px;
     background-color: rgb(197, 197, 197);
     margin-bottom: 20px;
-    left: -20px;
     position: relative;
-    box-sizing: border-box;   /* 패딩, 보더 등을 포함한 크기 계산 */
-    gap: -10px;
-}
-.btn-close-done {
-    background-color: whitesmoke;
-    border: 1px solid whitesmoke;
-    color : #ffffff; 
-    font-weight: bold;
-    margin : 0 10px 0 0;
-    margin-top : -12px;
-    float : right;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width : 20px;
-    height: 25px;
+    left: 8px;  /* 오른쪽으로 이동 (부모 요소 크기를 고려해야 함) */
 }
 
 
 .date-con {
 display: flex;
-margin-left: -3px;
+margin-left: -13px;
 }
 
 .TodoList {
@@ -485,7 +415,7 @@ font-weight: bold;
     color : #ffffff; 
     font-weight: bold;
     margin : 15px;
-    margin-top : 5px;
+    margin-top : -10px;
     float : right;
     display: flex;
     align-items: center;
@@ -552,14 +482,16 @@ font-weight: bold;
     transform: translateY(-33px);
 }
 .btn-star{
-    width: auto; /* width를 auto로 수정 */
-    margin-left: 132px;
+    margin-left: -200px;
+    margin-top : 20px;
     background-color: transparent;
     border: none;
     font-size: 20px; /* 글자 크기 조절 */
-    transform: translateY(-65px);
+    transform: translateY(-200px);
 }
-
+.custom-list span {
+    text-decoration: line-through; /* Adds a line through the text */
+}
 .div-group {
     display: flex;
     justify-content: space-between;  /* 두 요소 사이에 여백을 균등하게 분배 */

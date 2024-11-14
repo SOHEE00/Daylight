@@ -8,7 +8,21 @@
     <link rel="stylesheet" href="{% static 'Table/main.css' %}">
     <title>TodoList</title>
     <style>
-       .btn-memo {
+.custom-list {
+    list-style: none; /* Remove default list style */
+    padding: 0; /* Remove default padding */
+    margin: 10px; /* Remove default margin */
+    }
+.custom-list li {
+    font-size: 18px; /* Increase font size */
+    margin: -25px; /* Add some space between items */
+    color: rgb(130, 130, 130);
+    padding: 7px; /* Add padding to expand clickable area */
+    display: block; /* Make the entire list item a block element */
+    cursor: pointer; /* Change cursor to indicate clickable area */
+    }
+      
+      .btn-memo {
             background-color: #ffd08a;
             border: 1px solid #ffd08a; 
             color : #fa7617; 
@@ -130,10 +144,10 @@ margin-right: 90px;
             <img src="{% static 'chikawa.png' %}" width="150px" height="130px">
             <div class="name">Lee</div>
             <ul class="custom-list">
-                <li>Todo Board</li>
-                <li><a href="{% url 'timesheet' %}">Time Sheet</a></li>
-                <li><a href="{% url 'starpage' %}">Star page</a></li>
-                <li><a href="{% url 'sharedPage' %}">Shared page</a></li>
+                <li><a href="{% url 'main' %}"><img src="{% static 'memo.png' %}" alt="memo" style="width: 25px; height: 25px;">Daylight</a></li>
+                <li><a href="{% url 'timesheet' %}"><img src="{% static 'time.png' %}" alt="time" style="width: 25px; height: 25px;">Time Sheet</a></li>
+                <li><a href="{% url 'starpage' %}"><img src="{% static 'button_star.png' %}" alt="star" style="width: 25px; height: 25px;">Star page</a></li>
+                <li><a href="{% url 'sharedPage' %}"><img src="{% static 'people.png' %}" alt="people" style="width: 25px; height: 25px;"><span>Shared page</span></a></li>
             </ul>
             <a href="{% url 'loginsheet' %}">
                 <button class="login-button">
@@ -157,7 +171,7 @@ margin-right: 90px;
                     <div class="arrow left-arrow">
                         <button class="arrow-button">&#8592;</button> <!-- Left arrow -->
                     </div>
-                    2024 / 08 / 02 Fri
+                    <p id="currentDateTime">현재 날짜와 시간이 여기에 표시됩니다.</p>
                     <div class="arrow right-arrow">
                         <button class="arrow-button">&#8594;</button> <!-- Right arrow -->
                     </div>
@@ -225,7 +239,25 @@ margin-right: 90px;
         </div>
     </div>
            
-      
+    
+    <script>
+        // 현재 날짜와 시간을 가져오기
+      function displayCurrentDateTime() {
+        const now = new Date();
+    
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+    
+        const formattedDateTime = `${year}-${month}-${day}`;
+        document.getElementById("currentDateTime").textContent = ` ${formattedDateTime}`;
+    }
+    
+    // 함수 호출하여 날짜와 시간 표시
+    displayCurrentDateTime();
+    
+    
+    </script>
 
 </body>
 </html>
