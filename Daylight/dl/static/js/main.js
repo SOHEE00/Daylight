@@ -3,6 +3,19 @@ function log(message) {
     console.log(`[Debug] ${message}`);
 }
 
+
+function closeAllModals() {
+    // 현재 열려 있는 모든 모달을 닫기
+    document.querySelectorAll('.modal, .modal-done').forEach(function(modal) {
+        modal.style.display = "none";
+    });
+
+    // 전역 변수 초기화
+    currentModal = null;
+    log('All modals closed');
+}
+
+
 // 모달 관련 전역 변수
 var currentModal = null;
 
@@ -20,6 +33,9 @@ document.querySelectorAll('.table-box2').forEach(function(tableBox2) {
 function openModal(tableBox2) {
     log('Opening modal for table-box2');
     
+    // 모든 모달 닫기
+    closeAllModals();
+
     var todoId = tableBox2.querySelector('input[id^="todoNum"]')?.value;
     if (!todoId) {
         log('Todo ID not found');
@@ -51,6 +67,7 @@ function updateModalContent(tableBox2, todoId) {
     log(`Todo ID____: ${todoId}`);
     var todoContent = tableBox2.querySelector('input[id^="todoTable"]')?.value || '';
     var todoText = tableBox2.querySelector('input[id^="todoText"]')?.value || '';
+    var todoTime = tableBox2.querySelector('input[id^="todoTime"]')?.value || '';  // 시간 데이터 가져오기
     var todoImage = tableBox2.querySelector('img[id^="todoimg"]')?.src;
     //var todoTime = tableBox2.querySelector('input[id^="todoTime"]')?.value || '';
 
@@ -58,7 +75,6 @@ function updateModalContent(tableBox2, todoId) {
     console.log('todoTime:', todoTime);
 
    
-
     var editTodoTable = currentModal.querySelector(`[id^="editTodoTable"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoTable"]');
     var editTodoText = currentModal.querySelector(`[id^="editTodoText"][id$="${todoId}"]`) || currentModal.querySelector('[id^="editTodoText"]');
    
@@ -69,6 +85,16 @@ function updateModalContent(tableBox2, todoId) {
 
     var viewImage = currentModal.querySelector(`[id^="viewImg"][id$="${todoId}"]`) || currentModal.querySelector('[id^="viewImg"]');
 
+    
+    // 시간 텍스트 업데이트
+    var todoTimeElement = currentModal.querySelector('.todo-time');
+    if (todoTimeElement && todoTime) {
+        todoTimeElement.textContent = todoTime; // 시간 텍스트로 표시
+        log('Updated todo time text');
+    }
+
+
+
     if (editTodoTable) {
         editTodoTable.value = todoContent;
         log('Updated todo table content');
@@ -76,7 +102,7 @@ function updateModalContent(tableBox2, todoId) {
         console.log('editTodoTable:', editTodoTable.value);
         console.log('todoText:', todoText);
         console.log('todoImage:', todoImage);
-        console.log('todoTime:', editTodoTime.value);
+        console.log('todoTime:', todoTime);
 
     } else {
         log('Edit todo table input not found');
@@ -106,7 +132,8 @@ function updateModalContent(tableBox2, todoId) {
         viewImage.src = todoImage;
     }
     if(editTodoTime){
-        editTodoTime.value = todoTime;
+        editTodoTime.value = todoTime;  // 시간 업데이트
+        log('Updated todo time');
     }
 }
 
@@ -151,7 +178,7 @@ document.querySelectorAll('.table-box-done').forEach(function(tableBoxDone) {
     });
 
     // doneTodo 클릭 시 모달 띄우기
-    var clickableElements = tableBoxDone.querySelectorAll('input[id^="doneTodo"]');
+    var clickableElements = tableBoxDone.querySelectorAll('input[id^="doneTodo"], input[id^="table.done"]');
     clickableElements.forEach(function(element) {
         element.onclick = function(event) {
             event.preventDefault(); // 기본 동작 방지
@@ -162,6 +189,10 @@ document.querySelectorAll('.table-box-done').forEach(function(tableBoxDone) {
 
 // 모달 열기 함수
 function openModalDone(tableBoxDone) {
+
+    // 모든 모달 닫기
+    closeAllModals();
+
     var doneId = tableBoxDone.querySelector('input[id^="doneNum"]')?.value;
     if (!doneId) {
         console.log('Done ID not found');
@@ -175,8 +206,23 @@ function openModalDone(tableBoxDone) {
         return;
     }
 
+     // doneId에 해당하는 시간 정보 가져오기 (예: doneTime 요소에서 시간 값 가져오기)
+     var doneTime = tableBoxDone.querySelector('input[id^="doneTime"]')?.value || ''; // 예시: 시간 데이터를 가져옴
+
+     // 모달의 시간 표시 부분 찾기
+     var timeElement = currentModal.querySelector('.todo-time');
+     if (timeElement) {
+         // 시간을 표시
+         timeElement.textContent = formatTime(doneTime);  // 시간 포맷을 맞춰서 표시
+     }
+
+
+
+
     // 모달 보이기
     currentModal.style.display = "block";
+
+    
     log('Modal Done displayed');
 }
 
@@ -184,7 +230,10 @@ function openModalDone(tableBoxDone) {
 
 // 모든 닫기 버튼에 이벤트 리스너 추가
 document.querySelectorAll('.close-done').forEach(function(closeBtn) {
-    closeBtn.onclick = closeCurrentModalDone;
+    closeBtn.addEventListener('click', function(event) {
+        event.stopPropagation(); // 부모로 이벤트 전파 방지
+        closeCurrentModalDone();
+    });
 });
 
 // 모달 외부 클릭 시 닫기
@@ -194,6 +243,15 @@ window.onclick = function(event) {
         closeCurrentModalDone();
     }
 };
+
+window.onclick = function(event) {
+    if (event.target == currentModal) {
+        closeAllModals();
+    }
+};
+
+
+
 
 // 모달 닫기 함수
 function closeCurrentModalDone() {
@@ -287,3 +345,85 @@ document.getElementById('todoImage').addEventListener('change', function(event) 
 
 // 함수 호출하여 날짜와 시간 표시
 displayCurrentDateTime();
+
+
+// 모달 열 때 이미지 유무에 따라 크기 조정
+function adjustModalSize(doneId) {
+    var modal = document.getElementById(`myModal-done-${doneId}`);
+    var modalContent = modal.querySelector('.modal-content-done');
+    var image = modalContent.querySelector(`#viewDoneImg${doneId}`);  // 이미지 요소
+
+    // 이미지가 없으면 모달의 크기를 작게 조정
+    if (!image || !image.src || image.src.includes('undefined')) {
+        modalContent.style.height = '300px'; // 이미지가 없을 때 모달 크기 조정
+    } else {
+        modalContent.style.height = 'auto'; // 이미지가 있으면 자동 크기 조정
+    }
+}
+
+// 모든 .modal-done 요소에 클릭 이벤트 추가
+document.querySelectorAll('.modal-done').forEach(function(modal) {
+    modal.addEventListener('click', function() {
+        var doneId = modal.querySelector('input[name="editDoneId"]').value;
+        adjustModalSize(doneId);  // 해당 doneId에 맞는 모달 크기 조정
+    });
+});
+
+
+//날짜 페이지/데이터 변경
+const prevDayButton = document.getElementById('prevDay');
+const nextDayButton = document.getElementById('nextDay');
+const currentDateDisplay = document.getElementById('currentDateTime');
+const todoTable = document.getElementById('todoTable');
+
+let currentDate = new Date(currentDateDisplay.textContent); // 서버에서 전달받은 날짜
+
+function formatDate(date) {
+    return date.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 변환
+}
+
+prevDayButton.addEventListener('click', () => {
+    currentDate.setDate(currentDate.getDate() - 1); // 전날로 변경
+    updateDate();
+});
+
+nextDayButton.addEventListener('click', () => {
+    currentDate.setDate(currentDate.getDate() + 1); // 내일로 변경
+    updateDate();
+});
+
+function updateDate() {
+    const formattedDate = formatDate(currentDate);
+    currentDateDisplay.textContent = formattedDate; // 화면에 날짜 표시
+
+    // 서버에 새로운 날짜를 요청하여 데이터를 갱신
+    fetch(`/todos/${formattedDate}/`)
+        .then(response => response.json())
+        .then(data => {
+            // 기존 테이블을 지우고 새 데이터로 갱신
+            todoTable.innerHTML = ''; // 기존 테이블 내용 지우기
+
+            // 새로운 데이터로 테이블 채우기
+            data.todos.forEach(todo => {
+                const todoDiv = document.createElement('div');
+                todoDiv.classList.add('table-box3');
+                todoDiv.innerHTML = `
+                    <div class="table-box2">
+                        <div class="headG">
+                            <input id="todoTable" name="todoTable" type="text" value="${todo.content}">
+                            ${todo.image ? `<img src="${todo.image}" width="25px" height="20px" class="imgeee">` : ''}
+                        </div>
+                        ${todo.time ? `<p class="todo-time">${todo.time}</p>` : ''}
+                        <input id="todoText" name="todoText" type="text" value="${todo.text_content}">
+                        <img id="todoimg" src="${todo.image}" alt="Todo Image" style="max-width: 30px; height: auto;">
+                        <input type="hidden" id="todoNum" name="todoNum" value="${todo.id}">
+                    </div>
+                    <div class="buttondiv">
+                        <button class="btn btn-close">Del</button>
+                    </div>
+                `;
+                todoTable.appendChild(todoDiv);
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}

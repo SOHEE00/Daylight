@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('',views.index, name='index'),
+    path('todos/<str:date_str>/', views.todos_by_date, name='todos_by_date'),
     path('createTodo/',views.Create_todo, name='create_Todo'),
     path('deleteTodo/',views.Todo_delete, name='Todo_Delete'),
     path('updatePage/update/', views.Update_todo, name='Update_todo'),

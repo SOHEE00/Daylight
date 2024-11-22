@@ -40,6 +40,35 @@ function toggleDoneBox(button) {
 
 
 
+// 이미지 클릭 시 모달 열기
+document.querySelectorAll('.clickable-image').forEach(function(image) {
+    image.addEventListener('click', function() {
+        var imageUrl = this.getAttribute('data-image');
+        openModal(imageUrl);
+    });
+});
+
+// 모달 열기
+function openModal(imageUrl) {
+    var modal = document.getElementById("imageModal");
+    var modalImage = document.getElementById("modalImage");
+    modal.style.display = "block";
+    modalImage.src = imageUrl; // 클릭된 이미지의 URL을 모달에 설정
+}
+
+// 모달 닫기
+function closeModal() {
+    var modal = document.getElementById("imageModal");
+    modal.style.display = "none";
+}
+
+
+
+
+
+
+
+
   // 현재 날짜와 시간을 가져오기
   function displayCurrentDateTime() {
     const now = new Date();
@@ -57,7 +86,6 @@ displayCurrentDateTime();
 
 
 //12월 달력 임시
-
 function createCalendar() {
     const calendarBody = document.getElementById('calendarBody');
     const daysInDecember = 31;
@@ -78,6 +106,21 @@ function createCalendar() {
         calendarBody.appendChild(dayCell);
     }
 }
-
 // 함수 호출하여 달력 생성
 createCalendar();
+
+
+
+// 체크박스 고정
+document.addEventListener("DOMContentLoaded", () => {
+    const checkbox = document.getElementById("myCheckbox");
+
+    // 체크박스 상태 복원
+    const isChecked = localStorage.getItem("checkboxState") === "true";
+    checkbox.checked = isChecked;
+
+    // 체크박스 상태 저장
+    checkbox.addEventListener("change", () => {
+        localStorage.setItem("checkboxState", checkbox.checked);
+    });
+});

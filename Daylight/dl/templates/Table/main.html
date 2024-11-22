@@ -223,7 +223,14 @@ margin-left: 50px;
     margin-top: 5px;
     right: 100px;
 }
-
+.todo-time {
+    margin: 0; /* Remove default margin */
+    margin-left: 15px;
+    padding: 0; /* Adjust padding to reduce space inside the input */
+    font-size: 13px;  /* 원하는 글씨 크기로 설정 */
+    color: rgb(47, 50, 104);  /* 글씨 색상 설정 */
+    cursor: default; /* 기본 커서로 설정 */
+}
 .btn-star{
     width: auto; /* width를 auto로 수정 */
     margin-left: 132px;
@@ -275,7 +282,7 @@ margin-left: 50px;
             border-radius: 25px;
             background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 */
         }
-
+    
         .modal-content {
             background-color: #fff;
             margin: 10% auto;
@@ -314,27 +321,31 @@ margin-left: 50px;
     display: none; /* 기본적으로 숨김 */
     position: fixed;
     z-index: 1000;
-    
-    width: 400px;
-    height: 400px;
+    display: flex;
     border-radius: 25px;
-    background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 */
 }
 
 /* 모달 콘텐츠 */
 .modal-content-done {
     background-color: #fff;
-    margin: 10% auto;
     padding: 20px;
-    border-radius: 15px; /* 모서리 둥글게 */
-    border: 2px solid #ddd;
-    width: 700px;
+    position: fixed;
+    z-index: 1000;
+    border-radius: 15px;
+    width: 350px;
     height: 350px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #f9f9f9; /* 메모장 느낌을 위한 연한 배경색 */
+    
 }
 
-
+.modal-content-done input[type="text"] {
+    border: none;          /* 테두리 제거 */
+    background: none;      /* 배경 제거 */
+    outline: none;         /* 포커스 시 나타나는 아웃라인 제거 */
+    padding: 0;            /* 기본 패딩 제거 */
+    margin: 0;             /* 기본 마진 제거 */
+    font-size: 20px;
+}
 
 /* 닫기 버튼 */
 .close-done {
@@ -429,15 +440,30 @@ input[type="file"] {
     object-fit: cover; /* 이미지 비율 유지 */
 }
 #editTodoText {
-    width: 300px;
-    height: 200px;
     margin: 10px -50px 0 -10px; /* 왼쪽 여백을 20px로 줄이고 오른쪽 여백을 -50px로 조정 */
 }
 #editTodoTable {
     font-size: 18px;
     font-weight: bold;
 }
-
+#editTodoText {
+    font-size: 16px;  /* 원하는 글씨 크기 */
+    color: black;  /* 글씨 색상 */
+    padding: 5px;  /* 여백 추가 (옵션) */
+}
+/* input 기본 스타일 제거 */
+#todoImage {
+    all: unset; /* 모든 기본 스타일 제거 */
+    box-sizing: border-box; /* 크기 계산 방식 */
+    width: 100%; /* 필요한 경우 너비 지정 */
+    font-family: inherit; /* 부모 폰트 상속 */
+    font-size: inherit; /* 부모 폰트 크기 상속 */
+    background-color: transparent; /* 배경색 제거 */
+    color: inherit; /* 텍스트 색상 상속 */
+    padding: 0; /* 패딩 제거 */
+    margin: 0; /* 여백 제거 */
+    border: none; /* 테두리 제거 */
+}
 
     </style>
 </head>
@@ -510,7 +536,7 @@ input[type="file"] {
                 <form action="./createTodo/" method="POST"> {% csrf_token %}
                 <div class="table-box">
                     <input id="todoTable" name="todoTable" type="text" placeholder="제목을 적어주세요">
-                    <p><input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time }}" ></p>
+                    <p><input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time|date:'H:i' }}" ></p>
                     <input id="todoText" name="todoText" type="text" placeholder="메모할 내용을 적어주세요">
                     <button class="btn btn-memo" type="submit">Memo</button>
                 </div> </form>
@@ -531,9 +557,10 @@ input[type="file"] {
                             <img src="{% static 'imgeee.png' %}" name="imgeee" width="25px" height="20px" class="imgeee">
                             {% endif %}
                         </div>
-                    {% if todo.time != '00:00' %}
-                    <input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time }}" style="margin-left: 10px;" >
-                    {% endif %}
+                        {% if todo.time %}
+                        <p class="todo-time">{{ todo.time }}</p>  <!-- 시간만 출력 (예: 12:30) -->
+                        {% endif %}
+                    
                     <input id="todoText" name="todoText" type="text" value="{{ todo.text_content }}" >
                     <img id="todoimg" src="{% if todo.image %}{{ todo.image.url }}{% endif %}" alt="Todo Image" style="max-width: 30px; height: auto; display: none;">
                     <input type="hidden" id="todoNum" name="todoNum" value="{{todo.id}}"></input>
@@ -597,8 +624,10 @@ input[type="file"] {
                                     </div>
                                     <div class="setting-time">
                                         <div class="form-group">
+
+                                                <p class="todo-time">{{ todo.time }}</p>  <!-- 시간만 출력 (예: 12:30) -->
                                             
-                                            <p><input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time|slice:':5' }}" ></p>
+                                            <p><input type="time" id="todoTime{{ todo.id }}" name="todoTime"  value="{{ todo.time|date:'H:i' }}" ></p>
                                 
                                         </div>
                                     </div>
@@ -643,17 +672,17 @@ input[type="file"] {
                             <div class="modal-content-done">
                                 <span class="close-done">&times;</span>
                                     <input type="hidden" id="editDoneId{{ done.id }}" name="editDoneId" value="{{ done.id }}">
-                
-                                    <label for="editDoneTodo{{ done.id }}">제목:</label>
+                                    <input type="time" id="doneTime{{ done.id }}" name="doneTime" value="{{ done.time|date:'H:i' }}" class="styled-time" />
                                     <input id="editDoneTodo{{ done.id }}" name="editDoneTodo" type="text" value="{{ done.content }}">
+                                    <input id="editTodoText{{ done.id }}" name="editTodoText" type="text" value="{{ done.text_content }}" style="font-size: 16px; margin-top: 10px; font-weight: lighter;">
                 
                                     
                 
                 
                                 <!-- View Image Preview in Modal -->
-                                <div>
-                                    <h4>이미지:</h4>
-                                    <img id="viewDoneImg{{ done.id }}" src="{% if done.image %}{{ done.image.url }}{% endif %}" style="width: 100px;">
+                                <div class="imgbox">
+                                    <h4></h4>
+                                    <img id="viewDoneImg{{ done.id }}" src="{% if done.image %}{{ done.image.url }}{% endif %}" style="width: 300px;">
                                 </div>
                             </div>
                         </div>
@@ -665,7 +694,7 @@ input[type="file"] {
         </div>
     </div>
            
-      
+
 
 </body>
 </html>

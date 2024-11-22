@@ -436,7 +436,8 @@ input[type="file"] {
 
                 <div class="search-box">
                     <form action="{% url 'search' %}" method="get" class="search-form">
-                        <input class="search-txt" type="text" name="q" placeholder="검색어를 입력해 주세요">
+                        <input class="search-txt" type="text" name="q" placeholder="검색어를 입력해 주세요"
+                        value="{{ query|default:'' }}"> <!-- 검색어를 유지 -->>
                         <button class="search-btn" type="submit">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>

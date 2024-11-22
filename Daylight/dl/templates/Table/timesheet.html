@@ -99,7 +99,7 @@ a {
     width: 1000px;
     display: flex;
     flex-direction: column; /* Stack children vertically */
-    background-color: #f4f8fb;
+    background-color: #ffe9c8;
 }
 
 .header {
@@ -130,7 +130,7 @@ a {
     align-items: center;
     justify-content: center;
     text-align: center; 
-    color :#919da7;
+    color :#6f6146;
     gap : 10px;
     font-weight: bold;
 }
@@ -156,8 +156,13 @@ a {
     flex-wrap: wrap;
     background-color: aquamarine;
 }
-.table-box {
-    
+.timebox2 {
+background-color: #6f6146;
+padding: 30px; 
+margin-bottom: 10px; 
+border-radius: 25px; 
+width: 900px;
+justify-content: center;
 }
 .date-con {
     display: flex;
@@ -276,11 +281,17 @@ input[type="checkbox"] {
                 <div class="timebox">
                     
                     <div class="ck">
-                        <input type="checkbox">
+                        <input type="checkbox" id="myCheckbox">
                         
                         <div class="list-label">
-                        <span class="label">{{ todo.content }}</span> 
-                        
+                            <div class="label3">
+                            <span class="label">{{ todo.content }}</span> 
+
+                            {% if todo.image %}
+                                    <!-- 이미지 클릭 시 모달 열기 -->
+                                    <img src="{{ todo.image.url }}" width="25px" height="20px" class="clickable-image" data-image="{{ todo.image.url }}">
+                                    {% endif %}
+                            </div>    
                         <span class="hidden-content" style="display: none;">
                             {{ todo.text_content }}
                         </span>
@@ -288,7 +299,9 @@ input[type="checkbox"] {
                         </div>
                         <div class="jump">
                             <form>
-                                <p><input type="time" id="time" value="13:10:20" min="13:00:00" max="15:00:00"></p>
+                                {% if todo.time %}
+                                    <p class="todo-time">{{ todo.time|date:"h:i a" }}</p>  <!-- 시간만 출력 (예: 12:30) -->
+                                {% endif %}
                             </form> 
                         </div>
                         <label class="timedelete"><input id="check-btn" type="checkbox"/>
@@ -310,11 +323,17 @@ input[type="checkbox"] {
                     <div class="timebox2">
                         
                         <div class="ck">
-                            <input type="checkbox">
+                            
                             
                             <div class="list-label">
-                            <span class="label2">{{ dones.content }}</span> 
-                            
+                                <div class="label2">
+                                    <span class="label2">{{ dones.content }}</span> 
+                                    
+                                    {% if dones.image %}
+                                    <!-- 이미지 클릭 시 모달 열기 -->
+                                    <img src="{{ dones.image.url }}" width="25px" height="20px" class="clickable-image" data-image="{{ dones.image.url }}">
+                                    {% endif %}
+                                </div>    
                             <span class="hidden-content">
                                 {{ dones.text_content }}
                             </span>
@@ -322,7 +341,9 @@ input[type="checkbox"] {
                             </div>
                             <div class="jump">
                                 <form>
-                                    <p><input type="time" id="time" value="13:10:20" min="13:00:00" max="15:00:00"></p>
+                                    {% if dones.time %}
+                                        <p class="todo-time" style="color: white;">{{ dones.time|date:"h:i a" }}</p>  <!-- 시간만 출력 (예: 12:30) -->
+                                    {% endif %}
                                 </form> 
                             </div>
                             <div class="timedelete"><input id="check-btn" type="checkbox"/>
@@ -338,7 +359,13 @@ input[type="checkbox"] {
                         {% endfor %}
             </div>
                     
-                    
+             <!-- 이미지 모달 -->
+                <div id="imageModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <img id="modalImage" src="" alt="Image Preview" style="width: 100%;"/>
+                    </div>
+                </div>       
               
               
                 <div class="calendarcon">
