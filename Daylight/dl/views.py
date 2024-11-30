@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse,HttpResponseRedirect, reverse, get_object_or_404
+from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -6,22 +7,35 @@ from django.contrib.auth import authenticate, login
 from django.db.models import Q
 from django.core.files.storage import default_storage
 from datetime import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import render
+from django.contrib import messages
 from django.utils import timezone
 from .models import *
 
 def index(request) :
 
-    # 오늘 날짜 구하기
+     # 오늘 날짜 계산
     today = timezone.now().date()
 
-    # 오늘 날짜에 해당하는 Todo 항목만 가져옴
-    todos = Todo.objects.filter(done=False, time__date=today)
-    done_todos = Todo.objects.filter(done=True, time__date=today)
+    # 이전 날짜와 다음 날짜 계산
+    prev_date = today - timedelta(days=1)
+    next_date = today + timedelta(days=1)
 
-    # 템플릿에 전달할 데이터
-    content = {'todos': todos, 'done_todos': done_todos}
+    # 전날 - 7일과 다음날 + 7일 범위 데이터 가져오기
+    start_date = today - timedelta(days=7)
+    end_date = today + timedelta(days=7)
+
+    todos = Todo.objects.filter(done=False, time__date__range=(start_date, end_date))
+    done_todos = Todo.objects.filter(done=True, time__date__range=(start_date, end_date))
+
+    content = {
+        'todos': todos,
+        'done_todos': done_todos,
+        'today': today,
+        'prev_date': prev_date,  # 이전 날짜
+        'next_date': next_date,  # 다음 날짜
+    }
 
     # 'Table/main.html' 템플릿 렌더링
     return render(request, 'Table/main.html', content)
@@ -48,15 +62,22 @@ def Create_todo(request) :
     todo_text = request.POST['todoText']
     todo_time_str = request.POST.get('todoTime', '')  # 기본값을 빈 문자열로 설정
 
-     # time 값이 있을 경우 datetime 객체로 변환
-    if todo_time_str:  # todo_time_str이 빈 문자열이 아니면
-        # 오늘 날짜와 받아온 시간 합치기
-        date_str = datetime.now().date()  # 오늘 날짜
-        time_obj = datetime.combine(date_str, datetime.strptime(todo_time_str, '%H:%M').time())
-    else:
-        time_obj = None  # time 값이 없으면 None 처리
+    
+    today_date = datetime.now().date()  # 오늘 날짜
 
-    new_todo = Todo(content=todo_content, text_content=todo_text, time=time_obj)
+    if todo_time_str:
+        try:
+            time_part = datetime.strptime(todo_time_str, '%H:%M').time()  # 문자열을 time 객체로 변환
+        except ValueError:
+            time_part = time(0, 0)  # 잘못된 형식이면 기본값 00:00 설정
+    else:
+        time_part = time(0, 0)  # 시간 값이 비어 있으면 기본값 00:00 설정
+
+    # 날짜와 시간을 합쳐 datetime 객체 생성
+    datetime_obj = datetime.combine(today_date, time_part)
+
+
+    new_todo = Todo(content=todo_content, text_content=todo_text, time=datetime_obj)
     new_todo.save()
 
     return HttpResponseRedirect(reverse('index'))
@@ -164,7 +185,25 @@ def update_modal(request) :
         return HttpResponseRedirect(reverse('index'))
 
     # POST가 아닌 요청에 대한 처리
-    
+
+
+def get_todos_by_date(request):
+    date = request.GET.get('date')  # 요청에서 날짜 가져오기
+    todos = Todo.objects.filter(date=date)  # 해당 날짜의 데이터 가져오기
+    todos_data = [
+        {
+            "id": todo.id,
+            "content": todo.content,
+            "text_content": todo.text_content,
+            "time": todo.time.strftime("%H:%M") if todo.time else "",
+            "image": todo.image.url if todo.image else None
+        }
+        for todo in todos
+    ]
+    return JsonResponse({"todos": todos_data})
+
+
+
 
 def search_view(request):
     query = request.GET.get('q', '')
@@ -185,9 +224,16 @@ def search_view(request):
 
 
 def timesheet(request):
-    todos = Todo.objects.filter(done=False)  # 완료되지 않은 항목들만 가져옴
-    done_todos = Todo.objects.filter(done=True)
-    content = {'todos': todos,'done_todos': done_todos}
+     # 오늘 날짜 구하기
+    today = timezone.now().date()
+
+    # 오늘 날짜에 해당하는 Todo 항목만 가져옴
+    todos = Todo.objects.filter(done=False, time__date=today)
+    done_todos = Todo.objects.filter(done=True, time__date=today)
+
+    # 템플릿에 전달할 데이터
+    content = {'todos': todos, 'done_todos': done_todos}
+
     return render(request, 'Table/timesheet.html', content)
 
 def main(request) :
@@ -195,6 +241,59 @@ def main(request) :
 
 def loginsheet(request) :
     return render(request,'Table/login.html')
+
+
+def join(request) :
+    if request.method == "POST":
+        email = request.POST.get('signupEmail', '').strip()
+        pw = request.POST.get('signupPW', '').strip()
+        print(email, pw)  # 디버그 출력 
+
+        if not email or not pw:
+            messages.error(request, "이메일과 비밀번호를 모두 입력해주세요.")
+            return redirect('loginsheet')  # 로그인 페이지로 리다이렉트
+
+        # 이미 존재하는 이메일 확인
+        if User.objects.filter(user_email=email).exists():
+            messages.error(request, "이미 등록된 이메일입니다.")
+            return redirect('loginsheet')
+
+        # 비밀번호 암호화 후 저장
+        user = User(user_email=email, user_password=make_password(pw))
+        user.save()
+
+        # 성공 메시지와 로그인 페이지로 이동
+        messages.success(request, '회원가입이 완료되었습니다.')
+        return HttpResponseRedirect(reverse('loginsheet'))
+
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST['signupEmail']
+        pw = request.POST['signupPW']
+        
+        try:
+            # 이메일로 사용자 찾기
+            user = User.objects.get(user_email=email)
+            
+            # 비밀번호 검증
+            if check_password(pw, user.user_password):
+                # 비밀번호가 일치하면 세션에 사용자 이메일 저장
+                request.session['signupEmail'] = user.user_email
+                messages.success(request, '로그인 성공!')
+                return HttpResponseRedirect(reverse('index'))  # 메인 페이지로 이동
+            else:
+                messages.error(request, '비밀번호가 일치하지 않습니다.')
+                return HttpResponseRedirect(reverse('loginsheet'))  # 로그인 페이지로 이동
+                
+        except User.DoesNotExist:
+            # 이메일이 존재하지 않으면 오류 메시지 표시
+            messages.error(request, '존재하지 않는 이메일입니다.')
+            return HttpResponseRedirect(reverse('loginsheet'))  # 로그인 페이지로 이동
+    
+    return HttpResponseRedirect(reverse('index'))  # 메인 페이지로 이동
+
+
 
 
 def custom_login_view(request):
@@ -225,7 +324,10 @@ def delete_star(request) :
             
         # 해당 ID를 가진 Todo 객체를 가져와서 삭제
         star_del = get_object_or_404(Todo, id=star_id, star=True)
-        star_del.delete()
+        star_del.star = False  # star 값을 False로 설정
+        star_del.save()  # 변경사항 저장
+
+        star_del.save()
 
     return HttpResponseRedirect(reverse('starpage'))  
 

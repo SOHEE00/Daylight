@@ -370,60 +370,89 @@ document.querySelectorAll('.modal-done').forEach(function(modal) {
 });
 
 
-//날짜 페이지/데이터 변경
-const prevDayButton = document.getElementById('prevDay');
-const nextDayButton = document.getElementById('nextDay');
-const currentDateDisplay = document.getElementById('currentDateTime');
-const todoTable = document.getElementById('todoTable');
 
-let currentDate = new Date(currentDateDisplay.textContent); // 서버에서 전달받은 날짜
 
-function formatDate(date) {
-    return date.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 변환
-}
+document.addEventListener("DOMContentLoaded", function () {
+    const currentDateTimeElement = document.getElementById("currentDateTime");
+    let currentDate = new Date(); // 현재 날짜
 
-prevDayButton.addEventListener('click', () => {
-    currentDate.setDate(currentDate.getDate() - 1); // 전날로 변경
-    updateDate();
-});
+    // 날짜를 문자열로 변환하는 함수 (YYYY-MM-DD 형식)
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
 
-nextDayButton.addEventListener('click', () => {
-    currentDate.setDate(currentDate.getDate() + 1); // 내일로 변경
-    updateDate();
-});
+    // 화면에 현재 날짜 표시
+    function updateDateDisplay() {
+        console.log("Updated date:", currentDate); // 디버깅 메시지
+        currentDateTimeElement.textContent = formatDate(currentDate);
+    }
 
-function updateDate() {
-    const formattedDate = formatDate(currentDate);
-    currentDateDisplay.textContent = formattedDate; // 화면에 날짜 표시
+    updateDateDisplay();
 
-    // 서버에 새로운 날짜를 요청하여 데이터를 갱신
-    fetch(`/todos/${formattedDate}/`)
-        .then(response => response.json())
-        .then(data => {
-            // 기존 테이블을 지우고 새 데이터로 갱신
-            todoTable.innerHTML = ''; // 기존 테이블 내용 지우기
+    // 버튼 이벤트 핸들러
+    document.querySelector(".arrow-left-arrow").addEventListener("click", function () {
+        console.log("Left arrow clicked"); // 디버깅 메시지
+        currentDate.setDate(currentDate.getDate() - 1); // 전날로 이동
+        updateDateDisplay();
+        fetchTodos(); // 데이터 가져오기
+    });
 
-            // 새로운 데이터로 테이블 채우기
-            data.todos.forEach(todo => {
-                const todoDiv = document.createElement('div');
-                todoDiv.classList.add('table-box3');
-                todoDiv.innerHTML = `
+    document.querySelector(".arrow-right-arrow").addEventListener("click", function () {
+        console.log("Right arrow clicked"); // 디버깅 메시지
+        currentDate.setDate(currentDate.getDate() + 1); // 다음 날로 이동
+        updateDateDisplay();
+        fetchTodos(); // 데이터 가져오기
+    });
+
+    // AJAX 요청으로 데이터 가져오기
+    function fetchTodos() {
+        const formattedDate = formatDate(currentDate);
+        fetch(`/getTodosByDate/?date=${formattedDate}`)
+            .then(response => response.json())
+            .then(data => {
+                renderTodos(data.todos); // 데이터를 렌더링
+            })
+            .catch(error => console.error("Error fetching todos:", error));
+    }
+
+    // 테이블 렌더링 함수
+    function renderTodos(todos) {
+        const table = document.querySelector(".table");
+        table.innerHTML = ""; // 기존 데이터 초기화
+
+        todos.forEach(todo => {
+            const todoHTML = `
+                <div class="table-box3">
                     <div class="table-box2">
                         <div class="headG">
-                            <input id="todoTable" name="todoTable" type="text" value="${todo.content}">
-                            ${todo.image ? `<img src="${todo.image}" width="25px" height="20px" class="imgeee">` : ''}
+                            <input id="todoTable" name="todoTable" type="text" value="${todo.content}" >
+                            ${todo.image ? `<img src="/static/imgeee.png" name="imgeee" width="25px" height="20px" class="imgeee">` : ''}
                         </div>
                         ${todo.time ? `<p class="todo-time">${todo.time}</p>` : ''}
-                        <input id="todoText" name="todoText" type="text" value="${todo.text_content}">
-                        <img id="todoimg" src="${todo.image}" alt="Todo Image" style="max-width: 30px; height: auto;">
+                        <input id="todoText" name="todoText" type="text" value="${todo.text_content}" >
+                        <img id="todoimg" src="${todo.image ? todo.image : ''}" alt="Todo Image" style="max-width: 30px; height: auto; display: none;">
                         <input type="hidden" id="todoNum" name="todoNum" value="${todo.id}">
                     </div>
                     <div class="buttondiv">
                         <button class="btn btn-close">Del</button>
+                        <a href="./updatePage/${todo.id}" class="btn btn-danger" role="button">Change</a>
+                        <form action="./markAsDone/" method="POST">
+                            <input type="hidden" name="todo_id" value="${todo.id}">
+                            <button type="submit" class="btn-success">✔</button>
+                        </form>
+                        <form class="star-form" action="./markAsStar/" method="POST">
+                            <input type="hidden" name="todo_id" value="${todo.id}">
+                            <button type="submit" class="btn-star">☆</button>
+                        </form>
                     </div>
-                `;
-                todoTable.appendChild(todoDiv);
-            });
-        })
-        .catch(error => console.error('Error fetching data:', error));
-}
+                </div>
+            `;
+            table.insertAdjacentHTML("beforeend", todoHTML);
+        });
+    }
+});
+
+

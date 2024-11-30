@@ -108,6 +108,14 @@ font-weight: bold;
     font-weight: bold;
     transform: translateY(-33px);
 }
+.todo-time {
+    margin: 0; /* Remove default margin */
+    margin-left: 15px;
+    padding: 0; /* Adjust padding to reduce space inside the input */
+    font-size: 13px;  /* 원하는 글씨 크기로 설정 */
+    color: rgb(47, 50, 104);  /* 글씨 색상 설정 */
+    cursor: default; /* 기본 커서로 설정 */
+}
 .btn-star{
     position: relative; /* 또는 absolute */
     top: 60px;
@@ -134,7 +142,7 @@ font-weight: bold;
 
         .table-box2 {
             width : 220px;
-            height: 180px;
+            height: 200px;
             border-radius: 25px;
             background-color: rgb(255, 255, 255);
             box-shadow: 0px 3px 2px rgba(183, 183, 183, 0.2);
@@ -236,8 +244,18 @@ font-weight: bold;
                     <form action="./deleteTodo/" method="GET">
                         <div class="table-box">
                             <div class="table-box2">
-                            <input type="hidden" id="todoNum" name="todoNum" value="{{todo.id}}"></input>
-                            <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" disabled>
+
+                                <div class="headG">
+                                    <input id="todoTable" name="todoTable" type="text" value="{{ todo.content }}" >
+        
+                                    {% if todo.image %}
+                                    <img src="{% static 'imgeee.png' %}" name="imgeee" width="25px" height="20px" class="imgeee">
+                                    {% endif %}
+                                </div>
+                                {% if todo.time %}
+                                <p class="todo-time">{{ todo.time }}</p>  <!-- 시간만 출력 (예: 12:30) -->
+                                {% endif %}
+                            
                             <input id="todoText" name="todoText" type="text" value="{{ todo.text_content }}" disabled>
                             
                             </div>

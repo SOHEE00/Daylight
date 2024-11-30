@@ -13,3 +13,10 @@ class Todo(models.Model):
     time = models.DateTimeField(default=datetime.combine(datetime.today(), time(0, 0)))  # 시간을 저장할 경우 TimeField 사용
     star = models.BooleanField(default=False, null=False)
     done = models.BooleanField(default=False, null=False)
+
+
+# user 정보
+class User(models.Model) :
+    user_email = models.EmailField(unique=True)
+    user_password = models.CharField(max_length=100)
+    
